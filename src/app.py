@@ -6,10 +6,15 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db
+from api.models import db, User
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+import datetime
+from datetime import timedelta
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
+from flask_bcrypt import Bcrypt 
+
 
 # from models import Person
 
@@ -18,6 +23,7 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -28,8 +34,12 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["JWT_SECRET_KEY"] = "ULTRA_SECRET_PASSWORD"
+app.config["SECRET_KEY"] = "SECRET_WORD"
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
+jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
 
 # add the admin
 setup_admin(app)
@@ -66,6 +76,56 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
+
+@app.route("/login", methods=["POST"])
+def login():
+    login_email = request.json.get("email")
+    password = request.json.get("password")
+    user = User.query.filter_by(email=login_email).first()
+  
+
+    if user is not None:
+        if bcrypt.check_password_hash(user.password, password):
+            expire = datetime.timedelta(days=3)
+            token = create_access_token(identity = user.id, expires_delta=expire)
+
+            return jsonify({
+                "token": token,
+                "status": "success",
+                "user" : user.serialize(),
+                "msg":"Login accepted"
+            }) , 201
+        else:
+            return jsonify({
+            "msg":"Invalid email or password"
+        }), 401
+    else:
+        return jsonify({
+        "msg":"Invalid email or password"
+    }), 401
+
+@app.route("/register", methods=["POST"])
+def register():
+  register_email = request.json.get("email")
+  usuario = User()
+  existing_user = User.query.filter_by(email=register_email).first()
+  if existing_user is not None:
+    return jsonify({
+      "msg":"User already exists"
+    })
+  else:
+    usuario.email = request.json.get("email")
+    password = request.json.get("password")
+    #crypt password 
+    passwordHash = bcrypt.generate_password_hash(password)
+    usuario.password = passwordHash
+
+    db.session.add(usuario)
+    db.session.commit()
+
+  return jsonify({
+    "msg":"User created"
+  }) , 201
 
 
 # this only runs if `$ python src/main.py` is executed

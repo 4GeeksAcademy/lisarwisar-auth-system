@@ -46,6 +46,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+			login: async (email, password) => {
+				const loginURL = `https://turbo-train-5r77vrqj5rjcp6v9-3001.app.github.dev/login`;
+
+				await fetch(loginURL, {
+					method: "POST",
+					body: JSON.stringify({
+						"email": email,
+						"password": password
+					}), 
+					headers: {'Content-Type': 'application/json'}
+				})
+				.then (response => {
+					return response.json();
+				})
+				.then(data => {
+					console.log(data)
+				})
+				.catch(error => {
+					console.log(error);
+				})
 			}
 		}
 	};
