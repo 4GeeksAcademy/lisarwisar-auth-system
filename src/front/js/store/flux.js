@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -49,6 +51,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			login: async (email, password) => {
 				const loginURL = `https://turbo-train-5r77vrqj5rjcp6v9-3001.app.github.dev/login`;
+				const navigate = useNavigate()
+				let status = "error"
 
 				await fetch(loginURL, {
 					method: "POST",
@@ -62,11 +66,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return response.json();
 				})
 				.then(data => {
-					console.log(data)
+					if (data?.status == "success"){
+						navigate("/private")
+					}
+					else{
+						console.log("Invalid email or password")
+					}
 				})
 				.catch(error => {
 					console.log(error);
 				})
+
+				return (status)
 			}
 		}
 	};
