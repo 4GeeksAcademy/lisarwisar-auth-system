@@ -6,7 +6,6 @@ import { useState } from "react";
 export const Login = () => {
 
     const { store, actions } = useContext(Context);
-    const navigate = useNavigate()
 
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
@@ -28,5 +27,5 @@ export const Login = () => {
                 }}>Submit</button>
             </form>
         </div>
-    )
+    );
 }
