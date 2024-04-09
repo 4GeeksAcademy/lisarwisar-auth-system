@@ -78,6 +78,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 
 				return (status)
+			},
+
+			signup: async(email, password) => {
+
+				const signupURL = `https://turbo-train-5r77vrqj5rjcp6v9-3001.app.github.dev/signup`;
+				
+				fetch(signupURL, {
+					method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							'Authorization': 'Bearer ' + token //authorization token
+						},
+					body: JSON.stringify({
+						"email": email,
+						"password": password
+				})})
+				.then(response => {
+					return response.json();
+				})
+				.then(data => {
+					if (data.status =! "done"){
+						navigate("/login")
+					}
+					else{
+						console.log("There has been an error")
+					}
+				})
+				.catch(error => {
+					console.error(error)
+				})
 			}
 		}
 	};
