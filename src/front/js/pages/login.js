@@ -12,6 +12,7 @@ export const Login = () => {
 
     return(
         <div>
+            <h1>Login</h1>
             <form>
                 <div className="mb-3">
                     <label for="exampleInputEmail1" className="form-label">Email address</label>

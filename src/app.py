@@ -104,7 +104,7 @@ def login():
         "msg":"Invalid email or password"
     }), 401
 
-@app.route("/register", methods=["POST"])
+@app.route("/signup", methods=["POST"])
 def register():
   register_email = request.json.get("email")
   usuario = User()
@@ -124,7 +124,8 @@ def register():
     db.session.commit()
 
   return jsonify({
-    "msg":"User created"
+    "msg":"User created",
+    "data": "done"
   }) , 201
 
 

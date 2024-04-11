@@ -67,6 +67,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 				.then(data => {
 					if (data?.status == "success"){
+						localStorage.setItem("jwt-token", data?.token)
 						navigate("/private")
 					}
 					else{
@@ -108,6 +109,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				.catch(error => {
 					console.error(error)
 				})
+			},
+
+			logout: () => {
+				localStorage.setItem("jwt-token", "")
 			}
 		}
 	};
