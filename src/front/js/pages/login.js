@@ -1,14 +1,16 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 export const Login = () => {
 
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
 
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState()
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
 
     return(
         <div>
@@ -26,6 +28,10 @@ export const Login = () => {
                 <button type="submit" className="btn btn-primary" onClick={() =>{
                     actions.login(email, password)
                 }}>Submit</button>
+                <div className="my-3">
+                    <a>Don't have an account?</a><br></br>
+                    <button type="submit"  onClick={() => {navigate("/signup")}}>Create account</button>
+                </div>
             </form>
         </div>
     );

@@ -50,7 +50,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 			login: async (email, password) => {
-				const loginURL = `https://turbo-train-5r77vrqj5rjcp6v9-3001.app.github.dev/login`;
+				const loginURL = process.env.BACKEND_URL + "/api/login";
 				const navigate = useNavigate()
 				let status = "error"
 
@@ -83,7 +83,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			signup: async(email, password) => {
 
-				const signupURL = `https://turbo-train-5r77vrqj5rjcp6v9-3001.app.github.dev/signup`;
+				const signupURL = process.env.BACKEND_URL + "/api/signup";
 				
 				fetch(signupURL, {
 					method: "POST",
@@ -99,7 +99,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return response.json();
 				})
 				.then(data => {
-					if (data.status =! "done"){
+					if (data.status == "done"){
 						navigate("/login")
 					}
 					else{

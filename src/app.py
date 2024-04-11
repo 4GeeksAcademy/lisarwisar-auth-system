@@ -13,7 +13,8 @@ from api.commands import setup_commands
 import datetime
 from datetime import timedelta
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
-from flask_bcrypt import Bcrypt 
+from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 
 
 # from models import Person
