@@ -48,11 +48,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 			login: async (email, password) => {
-				const loginURL = process.env.BACKEND_URL + "/api/login";
+				const loginURL = process.env.BACKEND_URL + "/login";
 				let status = "error"
 
 				fetch(loginURL, {
 					method: "POST",
+					mode: 'no-cors',
 					headers: {'Content-Type': 'application/json'},
 					body: JSON.stringify({
 						"email": email,
@@ -79,13 +80,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return (status)
 			},
 
-			signup: async(email, password) => {
+			signup: async (email, password) => {
 
-				const signupURL = process.env.BACKEND_URL + "/api/signup";
+				const signupURL = process.env.BACKEND_URL + "/signup";
 				let status = "error"
 				
-				fetch(signupURL, {
+				await fetch(signupURL, {
 					method: "POST",
+					mode: 'no-cors',
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -98,12 +100,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return response.json();
 				})
 				.then(data => {
+					console.log("data: ", data)
 					if (data?.status == "success"){
 						status =  data?.status
 					}
 				})
 				.catch(error => {
-					console.log(error)
 				})
 
 				return(status)
