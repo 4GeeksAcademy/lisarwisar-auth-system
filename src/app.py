@@ -100,6 +100,7 @@ def login():
 
 @app.route("/signup", methods=["POST"])
 def signup():
+  print("data: ", request.json.get("email"))
   register_email = request.json.get("email")
   usuario = User()
   existing_user = User.query.filter_by(email=register_email).first()

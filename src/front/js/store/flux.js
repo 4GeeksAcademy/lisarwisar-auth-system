@@ -83,18 +83,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			signup: async (email, password) => {
 
 				const signupURL = process.env.BACKEND_URL + "/signup";
-				let status = "error"
+				let status = "error";
+				const userData = {email, password}
 				
 				await fetch(signupURL, {
 					method: "POST",
 					mode: 'no-cors',
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						"email": email,
-						"password": password
-					})
+					headers: {"Content-Type": "application/json"},
+					body: JSON.stringify(userData)
 				})
 				.then(response => {
 					return response.json();
