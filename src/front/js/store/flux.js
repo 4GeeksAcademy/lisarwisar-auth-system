@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -51,16 +49,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			login: async (email, password) => {
 				const loginURL = process.env.BACKEND_URL + "/api/login";
-				const navigate = useNavigate()
 				let status = "error"
 
-				await fetch(loginURL, {
+				fetch(loginURL, {
 					method: "POST",
+					headers: {'Content-Type': 'application/json'},
 					body: JSON.stringify({
 						"email": email,
 						"password": password
 					}), 
-					headers: {'Content-Type': 'application/json'}
 				})
 				.then (response => {
 					return response.json();
@@ -68,7 +65,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				.then(data => {
 					if (data?.status == "success"){
 						localStorage.setItem("jwt-token", data?.token)
-						navigate("/private")
+						status = data?.status
 					}
 					else{
 						console.log("Invalid email or password")
@@ -78,37 +75,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log(error);
 				})
 
+				console.log("fetch: ", status)
 				return (status)
 			},
 
 			signup: async(email, password) => {
 
 				const signupURL = process.env.BACKEND_URL + "/api/signup";
+				let status = "error"
 				
 				fetch(signupURL, {
 					method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-							'Authorization': 'Bearer ' + token //authorization token
-						},
+					headers: {
+						"Content-Type": "application/json",
+					},
 					body: JSON.stringify({
 						"email": email,
 						"password": password
-				})})
+					})
+				})
 				.then(response => {
 					return response.json();
 				})
 				.then(data => {
-					if (data.status == "done"){
-						navigate("/login")
-					}
-					else{
-						console.log("There has been an error")
+					if (data?.status == "success"){
+						status =  data?.status
 					}
 				})
 				.catch(error => {
-					console.error(error)
+					console.log(error)
 				})
+
+				return(status)
 			},
 
 			logout: () => {

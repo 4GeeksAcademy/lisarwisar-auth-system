@@ -41,6 +41,7 @@ MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
 jwt = JWTManager(app)
 bcrypt = Bcrypt(app)
+CORS(app)
 
 # add the admin
 setup_admin(app)
@@ -69,17 +70,9 @@ def sitemap():
 
 # any other endpoint will try to serve it like a static file
 
-
-@app.route('/<path:path>', methods=['GET'])
-def serve_any_other_file(path):
-    if not os.path.isfile(os.path.join(static_file_dir, path)):
-        path = 'index.html'
-    response = send_from_directory(static_file_dir, path)
-    response.cache_control.max_age = 0  # avoid cache memory
-    return response
-
 @app.route("/login", methods=["POST"])
 def login():
+    print("backend")
     login_email = request.json.get("email")
     password = request.json.get("password")
     user = User.query.filter_by(email=login_email).first()
@@ -106,7 +99,7 @@ def login():
     }), 401
 
 @app.route("/signup", methods=["POST"])
-def register():
+def signup():
   register_email = request.json.get("email")
   usuario = User()
   existing_user = User.query.filter_by(email=register_email).first()
@@ -126,8 +119,16 @@ def register():
 
   return jsonify({
     "msg":"User created",
-    "data": "done"
+    "status": "success"
   }) , 201
+
+@app.route('/<path:path>', methods=['GET'])
+def serve_any_other_file(path):
+    if not os.path.isfile(os.path.join(static_file_dir, path)):
+        path = 'index.html'
+    response = send_from_directory(static_file_dir, path)
+    response.cache_control.max_age = 0  # avoid cache memory
+    return response
 
 
 # this only runs if `$ python src/main.py` is executed
