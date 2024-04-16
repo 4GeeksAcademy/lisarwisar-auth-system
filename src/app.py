@@ -100,28 +100,29 @@ def login():
 
 @app.route("/signup", methods=["POST"])
 def signup():
-  print("data: ", request.json.get("email"))
-  register_email = request.json.get("email")
-  usuario = User()
-  existing_user = User.query.filter_by(email=register_email).first()
-  if existing_user is not None:
+    print("data: ", request.json.get("email"))
+    register_email = request.json.get("email")
+    usuario = User()
+    existing_user = User.query.filter_by(email=register_email).first()
+    if existing_user is not None:
+        return jsonify({
+        "msg":"User already exists"
+        })
+    else:
+        usuario.email = request.json.get("email")
+        password = request.json.get("password")
+        #crypt password 
+        passwordHash = bcrypt.generate_password_hash(password)
+        usuario.password = passwordHash
+        usuario.is_active = True
+
+        db.session.add(usuario)
+        db.session.commit()
+
     return jsonify({
-      "msg":"User already exists"
-    })
-  else:
-    usuario.email = request.json.get("email")
-    password = request.json.get("password")
-    #crypt password 
-    passwordHash = bcrypt.generate_password_hash(password)
-    usuario.password = passwordHash
-
-    db.session.add(usuario)
-    db.session.commit()
-
-  return jsonify({
-    "msg":"User created",
-    "status": "success"
-  }) , 201
+        "msg":"User created",
+        "status": "success"
+    }) , 201
 
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
