@@ -112,7 +112,7 @@ def signup():
         usuario.email = request.json.get("email")
         password = request.json.get("password")
         #crypt password 
-        passwordHash = bcrypt.generate_password_hash(password)
+        passwordHash = bcrypt.generate_password_hash(password).decode('utf-8')
         usuario.password = passwordHash
         usuario.is_active = True
 
