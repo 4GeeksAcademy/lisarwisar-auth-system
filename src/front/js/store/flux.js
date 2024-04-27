@@ -90,7 +90,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					method: "POST",
 					mode: 'no-cors',
 					headers: {"Content-Type": "application/json"},
-					body: JSON.stringify({userData})
+					body: JSON.stringify(userData)
 				})
 				.then(response => {
 					return response.json();
