@@ -88,7 +88,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				
 				await fetch(signupURL, {
 					method: "POST",
-					mode: 'no-cors',
+					//mode: 'no-cors',
 					headers: {"Content-Type": "application/json"},
 					body: JSON.stringify(userData)
 				})
@@ -102,6 +102,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 				.catch(error => {
+					console.log("error: ", error)
 				})
 
 				return(status)
