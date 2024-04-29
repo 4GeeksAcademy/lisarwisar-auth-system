@@ -24,8 +24,8 @@ export const Login = () => {
                 <label for="exampleInputPassword1" className="form-label">Password</label>
                 <input type="password" className="form-control" id="exampleInputPassword1" name ="password" onChange={(e) => setPassword(e.target.value)}></input>
             </div>
-            <button type="submit" className="btn btn-primary" onClick={() => {
-                if (actions.login(email, password) == "success"){
+            <button type="submit" className="btn btn-primary" onClick={async () => {
+                if (await actions?.login(email, password) == "success"){
                     navigate("/private")
                 }
                 else{

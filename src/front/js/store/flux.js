@@ -51,9 +51,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const loginURL = process.env.BACKEND_URL + "/login";
 				let status = "error"
 
-				fetch(loginURL, {
+				await fetch(loginURL, {
 					method: "POST",
-					mode: 'no-cors',
+					//mode: 'no-cors',
 					headers: {'Content-Type': 'application/json'},
 					body: JSON.stringify({
 						"email": email,
@@ -73,10 +73,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 				.catch(error => {
-					console.log(error);
+					console.log("error: ", error)
 				})
 
-				console.log("fetch: ", status)
 				return (status)
 			},
 

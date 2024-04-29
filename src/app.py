@@ -72,11 +72,9 @@ def sitemap():
 
 @app.route("/login", methods=["POST"])
 def login():
-    print("backend")
     login_email = request.json.get("email")
     password = request.json.get("password")
     user = User.query.filter_by(email=login_email).first()
-  
 
     if user is not None:
         if bcrypt.check_password_hash(user.password, password):
