@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
@@ -9,7 +9,7 @@ export const Private = () => {
     const { store, actions } = useContext(Context);
 
     function VerifyToken () {
-        token = localStorage.getItem("jwt-token")
+        let token = localStorage.getItem("jwt-token")
         if (token == ""){
             navigate("/login")
         }
